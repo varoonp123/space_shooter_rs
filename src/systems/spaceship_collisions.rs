@@ -117,23 +117,20 @@ impl<'s> System<'s> for SpaceshipBlastCollisionSystem {
 
                 // first check if the blast is allied with the player
                 // TODO blast should not hit if player is currently barrel rolling
-                match blast.blast_type {
+                if let BlastType::Enemy = blast.blast_type {
                     // using match here for ease of adding enemy blast effects (such as poison) in the future
-                    BlastType::Enemy => {
-                        entities
-                            .delete(event.colliding_entity)
-                            .expect("unable to delete entity");
+                    entities
+                        .delete(event.colliding_entity)
+                        .expect("unable to delete entity");
 
-                        spawn_blast_explosion(
-                            &entities,
-                            sprite_resource.blast_explosions_sprite_sheet.clone(),
-                            blast.blast_type.clone(),
-                            blast_transform.clone(),
-                            &lazy_update,
-                        );
-                        spaceship_health.value -= blast.damage;
-                    }
-                    _ => {}
+                    spawn_blast_explosion(
+                        &entities,
+                        sprite_resource.blast_explosions_sprite_sheet.clone(),
+                        blast.blast_type.clone(),
+                        blast_transform.clone(),
+                        &lazy_update,
+                    );
+                    spaceship_health.value -= blast.damage;
                 }
             }
         }

@@ -3,6 +3,7 @@ use amethyst::ecs::prelude::{Component, DenseVecStorage};
 use rand::{thread_rng, Rng};
 
 pub type SpawnProbabilities = Vec<(String, f32)>;
+pub type SpawnProbabilitiesSlice = [(String, f32)];
 
 pub struct Spawner {
     probabilities: SpawnProbabilities,
@@ -48,18 +49,15 @@ impl Spawner {
 
     /// disable specified item from spawning, at the same time increases all other items spawn rate
     /// if all items are disabled, `spawn_with_position` will always return None
-    pub fn disable_item(&mut self, item: &String) {
-        match self.probabilities.iter_mut().find(|(name, _)| name == item) {
-            Some((_, prob)) => {
-                *prob = 0.0;
-                self.prob_space = calculate_total_probabilities(&self.probabilities);
-            }
-            _ => {}
+    pub fn disable_item(&mut self, item: &str) {
+        if let Some((_, prob)) = self.probabilities.iter_mut().find(|(name, _)| name == item) {
+            *prob = 0.0;
+            self.prob_space = calculate_total_probabilities(&self.probabilities);
         }
     }
 }
 
-pub fn choose_random_name(probs: &SpawnProbabilities) -> &String {
+pub fn choose_random_name(probs: &SpawnProbabilitiesSlice) -> &String {
     choose_name_precalculated(calculate_total_probabilities(&probs), &probs)
 }
 
@@ -69,11 +67,11 @@ fn choose_position() -> f32 {
     ARENA_MIN_X + ARENA_SPAWN_OFFSET + thread_rng().gen::<f32>() * (max_width - min_width)
 }
 
-fn calculate_total_probabilities(probs: &SpawnProbabilities) -> f32 {
+fn calculate_total_probabilities(probs: &SpawnProbabilitiesSlice) -> f32 {
     probs.iter().fold(0.0, |sum, item| sum + item.1)
 }
 
-fn choose_name_precalculated(total_probs: f32, probs: &SpawnProbabilities) -> &String {
+fn choose_name_precalculated(total_probs: f32, probs: &SpawnProbabilitiesSlice) -> &String {
     // pos is in [0..total_probs)
     let pos = thread_rng().gen::<f32>() * total_probs;
     let mut sum = 0.0;

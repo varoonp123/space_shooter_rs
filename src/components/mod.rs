@@ -56,19 +56,19 @@ pub trait Rigidbody {
     }
 
     fn accelerate_x(&mut self, direction: f32, motion_2d: &mut Motion2DComponent) {
-        motion_2d.velocity.x = motion_2d.velocity.x + (direction * motion_2d.acceleration.x);
+        motion_2d.velocity.x += direction * motion_2d.acceleration.x;
     }
 
     fn accelerate_y(&mut self, direction: f32, motion_2d: &mut Motion2DComponent) {
-        motion_2d.velocity.y = motion_2d.velocity.y + (direction * motion_2d.acceleration.y);
+        motion_2d.velocity.y += direction * motion_2d.acceleration.y;
     }
 
     fn decelerate_x(&mut self, direction: f32, motion_2d: &mut Motion2DComponent) {
-        motion_2d.velocity.x = motion_2d.velocity.x + (direction * motion_2d.deceleration.x);
+        motion_2d.velocity.x += direction * motion_2d.deceleration.x;
     }
 
     fn decelerate_y(&mut self, direction: f32, motion_2d: &mut Motion2DComponent) {
-        motion_2d.velocity.y = motion_2d.velocity.y + (direction * motion_2d.deceleration.y);
+        motion_2d.velocity.y += direction * motion_2d.deceleration.y;
     }
 
     fn accelerate(

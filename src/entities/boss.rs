@@ -69,7 +69,7 @@ pub fn spawn_repeater(
     );
     let left_shoulder = spawn_enemy(
         &entities,
-        sprite_sheet.clone(),
+        sprite_sheet,
         left_shoulder_entity_data,
         left_shoulder_position,
         &lazy_update,
